@@ -10,19 +10,16 @@ timePerWait = 20
 rushHour = 3600.0
 
 floorCount = 12
-elevatorCount = 5
+elevatorCount = 3
 
 # Sets up the building, filling all the floors with people
-def fillBuilding():
+def fillBuilding(floorCount):
     building = []
     for i in range(floorCount - 1):
         building.append(peoplePerFloor)
     return building
 
-# Determines the time for circuit (curr),
-# as well as average carrying capacity per circuit.
-# Given e - array of elevators, which holds the highest
-# serviced floor, and i the current index of e.
+
 def eleLoop(e, i):
     floorsServiced = e[i] - e[i-1] + 1
     curr = timePerFloor * e[i] * 2
@@ -41,23 +38,14 @@ def addFloor(e):
     best = 9999
     for i in range(1, len(e)):
         curr, avgCarry = eleLoop(e, i)
-        if curr + (2 * avgCarry) < best:
+        if curr * avgCarry < best:
             choiceIndex = i
-            best = curr + (2 * avgCarry)
+            best = curr * avgCarry
     for i in range(choiceIndex, len(e)):
         e[i] += 1
     return e
 
-# Prints the population of the buildings floor as an array.
-def printApprox(building):
-  str = '[  '
-  for i in range(len(building)):
-      str += '%06.3f  ' % building[i]
-  str += ']'
-  print str
 
-
-# Prints the circuit(s) for each of the elevators
 def printeleLoop(e):
     print ''
     print e
@@ -67,23 +55,24 @@ def printeleLoop(e):
         curr = timePerFloor * e[i] * 2
         curr += timePerWait * floorsServiced
         avgCarry = curr * peoplePerFloor / rushHour * floorsServiced
-        str = 'Elevator #%d, time for loop %d seconds, ' % (i, curr)
+        str = 'Elevator #%d, time for loop %d seconds' % (i, curr)
         str += 'carrying an average of '
         str += '%3.2f people per carry' % avgCarry
         print str
     print ''
     
-# Allocate elevators
-# Elevator[] represents the starting
-# group of stops.
-#
-# i.e.
-# If elevator[0]= 3 and elevator[1] = 5,
-# elevator[0] visits floors 3 and 4.
-# If elevator[1] = 7 instead,
-# elevator[0] visits 3, 4, 5, and 6
+
 def elevatorAllocation(building, elevatorCount):
 
+    # Allocate elevators
+    # Elevator[] represents the starting
+    # group of stops. 
+    #
+    # i.e. 
+    # If elevator[0]= 3 and elevator[1] = 5,
+    # elevator[0] visits floors 3 and 4.
+    # If elevator[1] = 7 instead,
+    # elevator[0] visits 3, 4, 5, and 6
     elevator = []
     for i in range(elevatorCount + 1):
         elevator.append(0)
@@ -94,12 +83,6 @@ def elevatorAllocation(building, elevatorCount):
 
 def simulate(e, building):
 
-    str = '[  '
-    for floor in range(len(building)):
-      str += 'floor%2d ' % (floor + 1)
-    str += ']'
-    print str
-
     eCircuit = []
     for i in range(len(e)):
         curr, avgCarry = eleLoop(e, i)
@@ -109,22 +92,27 @@ def simulate(e, building):
     totalTime = 0.0
 
     while emptyFloors < len(building):
-        emptyFloors = 0
         for i in range(1, len(e)):
             for j in range(e[i-1], e[i]):
                 if building[j] > 0.0:
                     persons = eCircuit[i] * peoplePerFloor / rushHour
                     building[j] = building[j] - persons
-                if 0 >= building[j]:
-                    building[j] = 0.0
-                    emptyFloors += 1
+                    if 0 > building[j]:
+                        building[j] = 0.0
+                        emptyFloors += 1
         printApprox(building)
     print ''
 
+def printApprox(building):
+    str = '[ '
+    for i in range(len(building)):
+        if building[i] < 0:
+            str += '%06.2f ' % (0.00)
+        else:
+            str += '%06.2f ' % building[i]
+    str += ']'
+    print str
 
-
-# ___ MAIN ____
-
-building = fillBuilding()
+building = fillBuilding(floorCount)
 elevator = elevatorAllocation(building, elevatorCount)
 simulate(elevator, building)
