@@ -10,7 +10,7 @@ timePerWait = 20
 rushHour = 3600.0
 
 floorCount = 12
-elevatorCount = 5
+elevatorCount = 3
 
 # Sets up the building, filling all the floors with people
 def fillBuilding(floorCount):
@@ -20,14 +20,13 @@ def fillBuilding(floorCount):
     return building
 
 
-def eleLoop(e, i):
+def timeLoop(e, i):
     floorsServiced = e[i] - e[i-1] + 1
     curr = timePerFloor * e[i] * 2
     curr += timePerWait * floorsServiced
-    avgCarry = curr * peoplePerFloor / rushHour * floorsServiced
     if curr < 0:
         curr = 0
-    return curr, avgCarry
+    return curr
 
 # (Index * 5 seconds) + (20 seconds * (Index - PrevIndex))
 # If previous elevators loops/stops add up to be greater than,
@@ -37,29 +36,21 @@ def addFloor(e):
     choiceIndex = 0
     best = 9999
     for i in range(1, len(e)):
-        curr, avgCarry = eleLoop(e, i)
-        if curr * avgCarry < best:
+        curr = timeLoop(e, i)
+        if curr < best:
             choiceIndex = i
-            best = curr * avgCarry
+            best = curr    
     for i in range(choiceIndex, len(e)):
         e[i] += 1
     return e
 
 
-def printeleLoop(e):
-    print ''
-    print e
-    print ''
+def printTimeLoop(e):
     for i in range(1, len(e)):
         floorsServiced = e[i] - e[i-1] + 1
         curr = timePerFloor * e[i] * 2
         curr += timePerWait * floorsServiced
-        avgCarry = curr * peoplePerFloor / rushHour * floorsServiced
-        str = 'Elevator #%d, time for loop %d seconds' % (i, curr)
-        str += 'carrying an average of '
-        str += '%3.2f people per carry' % avgCarry
-        print str
-    print ''
+        print 'Elevator #%d, time for loop %d seconds' % (i, curr)
     
 
 def elevatorAllocation(building, elevatorCount):
@@ -78,21 +69,19 @@ def elevatorAllocation(building, elevatorCount):
         elevator.append(0)
     for i in range(1, floorCount):
         elevator = addFloor(elevator)
-    printeleLoop(elevator)
+    printTimeLoop(elevator)
     return elevator
 
 def simulate(e, building):
 
     eCircuit = []
     for i in range(len(e)):
-        curr, avgCarry = eleLoop(e, i)
-        eCircuit.append(float(curr))
-
+        eCircuit.append(float(timeLoop(e, i)))
     emptyFloors = 0
-    totalTime = 0.0
+    total = 0
 
     while emptyFloors is not len(building):
-        for i in range(1, len(e)):
+        for i in range(len(e)):
             for j in range(e[i-1], e[i]):
                 if 0.0 > building[j]: 
                     building[j] = 0.0
@@ -100,18 +89,7 @@ def simulate(e, building):
                 elif building[j] > 0.0:
                     persons = eCircuit[i] * peoplePerFloor / rushHour
                     building[j] = building[j] - persons
-        printApprox(building)
-    print ''
-
-def printApprox(building):
-    str = '[ '
-    for i in range(len(building)):
-        if building[i] < 0:
-            str += '%06.2f ' % (0.00)
-        else:
-            str += '%06.2f ' % building[i]
-    str += ']'
-    print str
+        print building
 
 building = fillBuilding(floorCount)
 elevator = elevatorAllocation(building, elevatorCount)

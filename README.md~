@@ -9,15 +9,13 @@ hours a day which are "rush-hour times," the algorithm is designed to
 provide the most "fair" way to destribute the elevators to the various floors.
 
 That is to say, the algorithm allocates resources in an attempt
-to make the average wait time, multiplied by the average passanger load
-of each elevator, to be as close to the same as possible. Thereby, taking into 
-consideration comfort, carrying capacity, and wait time all in one.
+to make the average wait time per elevator to be the exact same per floor.
 
 
 The algorithm requires the following variables:
 
-* Number of Floors - 12
-* Number of Elevators - 5
+* Number of Floors
+* Number of Elevators
 
 The algorithm assumes the following constants. 
 The variables can be adjusted, but do not effect the algorithm:
