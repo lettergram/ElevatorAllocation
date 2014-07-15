@@ -2,12 +2,11 @@ Elevator Optimization Algorithm
 =============
 
 This algorithm is designed to minimize the total waiting time 
-of all individuals waiting in a building, while also trying to balance
-the weight load. Given there are equal number of people on each floor, 
-with a uniform appearance of individuals to use the elevator at each 
-floor. Assuming there are several hours a day which are "rush-hour times," 
-the algorithm is designed to provide the most "fair" way to destribute 
-the elevators to the various floors.
+of all individuals waiting in a building. Given there are equal
+number of people on each floor, with a uniform appearance of individuals
+to use the elevator at each floor. Assuming there are several
+hours a day which are "rush-hour times," the algorithm is designed to 
+provide the most "fair" way to destribute the elevators to the various floors.
 
 That is to say, the algorithm allocates resources in an attempt
 to make the average wait time, multiplied by the average passanger load
