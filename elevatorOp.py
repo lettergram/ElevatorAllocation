@@ -9,7 +9,7 @@ timePerWait = 20
 # 3600 seconds per hours
 rushHour = 3600.0
 
-floorCount = 12
+floorCount = 10
 elevatorCount = 3
 
 # Sets up the building, filling all the floors with people
@@ -40,10 +40,10 @@ def addFloor(e):
     choiceIndex = 0
     best = 9999
     for i in range(1, len(e)):
-        curr, avgCarry = eleLoop(e, i)
-        if curr + (2 * avgCarry) < best:
+        cirTime, avgCarry = eleLoop(e, i)
+        if cirTime + ((cirTime / 100) * avgCarry) < best:
             choiceIndex = i
-            best = curr + (2 * avgCarry)
+            best = cirTime + ((cirTime / 100) * avgCarry)
     for i in range(choiceIndex, len(e)):
         e[i] += 1
     return e
