@@ -25,12 +25,10 @@ def fillBuilding():
 # serviced floor, and i the current index of e.
 def eleLoop(e, i):
     floorsServiced = e[i] - e[i-1] + 1
-    curr = timePerFloor * e[i] * 2
-    curr += timePerWait * floorsServiced
-    avgCarry = curr * peoplePerFloor / rushHour * floorsServiced
-    if curr < 0:
-        curr = 0
-    return curr, avgCarry
+    cirTime = timePerFloor * e[i] * 2
+    cirTime += timePerWait * floorsServiced
+    avgCarry = cirTime * peoplePerFloor / rushHour * floorsServiced
+    return cirTime, avgCarry
 
 # (Index * 5 seconds) + (20 seconds * (Index - PrevIndex))
 # If previous elevators loops/stops add up to be greater than,
@@ -42,9 +40,9 @@ def addFloor(e):
     for i in range(1, len(e)):
         cirTime, avgCarry = eleLoop(e, i)
         if cirTime + ((cirTime / 100) * avgCarry) < best:
-            choiceIndex = i
+            elevatorNumber = i
             best = cirTime + ((cirTime / 100) * avgCarry)
-    for i in range(choiceIndex, len(e)):
+    for i in range(elevatorNumber, len(e)):
         e[i] += 1
     return e
 
