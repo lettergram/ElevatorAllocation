@@ -19,7 +19,7 @@ def fillBuilding():
         building.append(peoplePerFloor)
     return building
 
-# Determines the time for circuit (curr),
+# Determines the time for circuit (cirTime),
 # as well as average carrying capacity per circuit.
 # Given e - array of elevators, which holds the highest
 # serviced floor, and i the current index of e.
@@ -35,7 +35,6 @@ def eleLoop(e, i):
 # (timePerFloor * 2) + timePerWait, then increase floor of previous
 # elevators loop. i.e. elevator[2]+=1   
 def addFloor(e):
-    choiceIndex = 0
     best = 9999
     for i in range(1, len(e)):
         cirTime, avgCarry = eleLoop(e, i)
@@ -74,12 +73,6 @@ def printeleLoop(e):
 # Allocate elevators
 # Elevator[] represents the starting
 # group of stops.
-#
-# i.e.
-# If elevator[0]= 3 and elevator[1] = 5,
-# elevator[0] visits floors 3 and 4.
-# If elevator[1] = 7 instead,
-# elevator[0] visits 3, 4, 5, and 6
 def elevatorAllocation(building, elevatorCount):
 
     elevator = []
@@ -90,6 +83,7 @@ def elevatorAllocation(building, elevatorCount):
     printeleLoop(elevator)
     return elevator
 
+# Simulates the building being emptied at rush hour
 def simulate(e, building):
 
     str = '[  '
