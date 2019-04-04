@@ -1,6 +1,8 @@
 Elevator Optimization Algorithm
 =============
 
+This is code supporting the article [Everyday Algorithms: Elevator Allocation](https://austingwalters.com/everyday-algorithms-elevator-allocation/)
+
 This algorithm is designed to minimize the total waiting time 
 of all individuals waiting in a building, while also trying to balance
 the weight load. Given there are equal number of people on each floor, 
